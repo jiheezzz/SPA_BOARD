@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- jQuery 로드 -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/2.3.0/purify.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판</title>
+    <style type="text/css">
+        body {
+            text-align: center;
+        }
+
+        table {
+            margin: auto;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        #post-form textarea {
+            width: 70%;
+            height: 120px;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+        }
+
+        #main-container {
+            display: flex;
+            padding: 20px;
+            position: relative;
+            margin-right: 250px;
+        }
+
+        #board-detail-container {
+            width: 30%;
+            padding-left: 20px;
+            border-left: 1px solid #ddd;
+            height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+
+        #detail-content {
+            padding: 20px;
+            text-align: left;
+            margin: auto;
+        }
+
+
+        #edit-form {
+            width: 25%;
+            padding-left: 20px;
+            text-align: left;
+            margin: auto;
+        }
+
+        #detail-photo {
+            max-width: 100%;
+            width: auto;
+            height: auto;
+            margin-top: 10px;
+        }
+
+        .detail-container img {
+            max-width: 30%;
+            margin-right: 20px;
+        }
+
+        button {
+            padding: 8px 12px;
+            background-color: #f2f2f2;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+
+        button:hover {
+            background-color: #ddd;
+        }
+
+
+        #detail-edit-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        #detail-content img {
+            max-width: 150px;
+            margin-top: 10px;
+        }
+
+        #edit-form {
+            flex:auto;
+        }
+		#post-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 각 폼 그룹 간 간격 */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* 라벨 스타일 */
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: left;
+}
+
+/* 입력 필드 스타일 */
+input[type="text"],
+input[type="password"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+/* 입력 필드 포커스 시 스타일 */
+input[type="text"]:focus,
+input[type="password"]:focus,
+select:focus,
+textarea:focus {
+    border-color: #007BFF;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* 파일 선택 버튼 */
+input[type="file"] {
+    padding: 10px;
+}
+
+/* 이메일 선택 영역 스타일 */
+.email-fields {
+    display: flex;
+    align-items: center;
+}
+
+.email-fields input {
+    flex: 1;
+    margin-right: 10px;
+}
+
+#email-select {
+    flex: 1;
+}
+
+.button-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 10px;
+}
+/* 제출 버튼 스타일 */
+button[type="submit"] {
+    background-color: #007BFF;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+
+/* 제목과 내용 필드 스타일 */
+h3, p {
+    margin: 0;
+    padding: 5px 0;
+}
+#content-display {
+        font-family: Arial, sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #333;
+        padding: 10px;
+        border: 1px solid #ddd;
+        background-color: #f9f9f9;
+        border-radius: 4px;
+        margin-top: 10px;
+    }
+	#content-display img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 10px 0;
+}
+
+
+
+#edit-etc {
+    width: 100%; /* 넓이를 부모 요소의 100%로 설정 */
+    height: 200px; /* 높이를 200px로 설정 */
+    resize: both; /* 사용자가 넓이와 높이를 조절할 수 있게 설정 */
+    padding: 10px; /* 텍스트와 테두리 사이에 여유 공간 추가 */
+    box-sizing: border-box; /* padding과 border를 포함한 넓이 계산 */
+}
+
+.toggle-link {
+            text-align: right;
+            margin-top: 10px;
+            display: block;
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        .hidden {
+            display: none;
+        }
+         .password-container {
+	      position: relative;
+	      width: 100%;
+	      max-width: 300px; /* 필요에 따라 너비 조정 */
+	  }
+	
+	  .password-container input {
+	      width: 100%;
+	      padding-right: 50px; /* 버튼 공간 확보 */
+	  }
+	
+	  .password-container button {
+	      position: absolute;
+	      left: 250px;
+	      top: 60%;
+	      transform: translateY(-50%);
+	      border: none;
+	      background: none;
+	      cursor: pointer;
+	      visibility:visible;
+	  }
+
+	  .modal {
+		    display: none;
+		    position: fixed;
+		    z-index: 1;
+		    left: 0;
+		    top: 0;
+		    width: 100%;
+		    height: 100%;
+		    background-color: rgba(0, 0, 0, 0.5);
+		}
+		
+		.modal-content {
+		    background-color: #fefefe;
+		    margin: 15% auto;
+		    padding: 20px;
+		    border: 1px solid #888;
+		    width: 300px;
+		    text-align: center;
+		}
+		
+		.close {
+		    color: #aaa;
+		    float: right;
+		    font-size: 28px;
+		    font-weight: bold;
+		    cursor: pointer;
+		}
+		
+		.limited-width {
+		    max-width: 200px;  /* 원하는 최대 너비 */
+		    overflow-wrap: break-word;
+		    word-break: break-all;  /* 긴 단어가 있으면 줄을 넘겨서 표시 */
+		    white-space: normal;  /* 기본적으로 여러 줄로 표시 */
+		    overflow: visible;  /* 넘치는 부분이 밑으로 보이도록 설정 */
+		}
+		.selected {
+    background-color: #007bff; /* 원하는 색상으로 설정 */
+    color: white; /* 글자 색상 변경 */
+}
+
+/* Comment container */
+.comment {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    max-width: 600px; /* Set a wider width */
+     overflow-wrap: break-word; /* Break words that are too long */
+    word-break: break-all; /* Break all long words or numbers */
+}
+
+/* Comment content */
+.comment-content {
+    flex: 1;
+    word-wrap: break-word;
+    margin-right: 10px; /* Add space between text and buttons */
+}
+
+/* Comment actions container for date and delete button */
+.comment-actions {
+    display: flex;
+    flex-direction: column; /* Stack date and button vertically */
+    align-items: flex-end;
+}
+
+/* Comment date style */
+.comment-date {
+    font-size: 12px;
+    color: #999;
+    margin-bottom: 5px;
+    white-space: nowrap; /* Prevent the date from wrapping */
+}
+
+/* Delete button style */
+.delete-btn {
+    background-color: #ff4d4d;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 5px 10px;
+    font-size: 12px;
+}
+
+.delete-btn:hover {
+    background-color: #e60000;
+}
+
+
+		
+
+    </style>
+</head>
+<body>
+    <div id="app">
+<div id="board-container">
+        <a id="reset-btn"><h1>1대1 문의 게시판</h1></a>
+        <div id="board-content">
+        <div class="button-container">
+	        <form id="logoutForm" action="/logout" method="POST">
+			    <button type="submit">Logout</button>
+			</form>
+	        <button onclick="togglePostForm()">새글쓰기</button>
+	    </div>
+        <br>
+	<form id="post-form" style="display: none;">
+	    <div class="form-group">
+	        <label for="inquiry-type">카테고리</label>
+	        <select id="inquiry-type" required>
+	            <option value="상품문의">상품문의</option>
+	            <option value="배송문의">배송문의</option>
+	            <option value="기타문의">기타문의</option>
+	        </select>
+	        <br><br>
+	
+	        <label for="etc">내용</label>
+	        <div style="position: relative; width: 100%;">
+			    <textarea id="etc" name="etc" oninput="validateLength()" style="width: 100%; height: 200px;"></textarea>
+			    <span id="char-count" style="position: absolute; bottom: 10px; right: 10px;">0/255 글자</span>
+			</div>
+
+	        <br><br>
+	
+	        <input type="file" id="file" name="file" accept="image/*" onchange="validateImage()">
+	        <br><br>
+	
+	        <!-- 비밀글 여부 체크박스 추가 -->
+	        <label for="is-secret">   
+	        	<input type="checkbox" id="is-secret" name="is-secret" >비밀글로 설정
+	        </label>
+	        <br><br>
+	
+	        <button type="button" onclick="submitBoard()">작성</button>
+	    </div>
+	</form>
+
+
+  
+        <div id="output"></div>
+        <br>
+
+        <!-- 검색 방식 선택 -->
+		<select id="searchType" onchange="toggleSearchInput()">
+		    <option value="title">카테고리</option>
+		    <option value="name">작성자ID</option>
+		</select>
+		
+		<!-- 검색 입력 (동적으로 변경) -->
+		<div id="searchInputContainer"></div>
+		
+		<!-- 카테고리 옵션을 HTML 내부에서 정의 -->
+		<select id="predefinedTitles" style="display:none;">
+		    <option value="검색어를 선택하세요.">검색어를 선택하세요.</option>
+		    <option value="상품문의">상품문의</option>
+		    <option value="배송문의">배송문의</option>
+		    <option value="기타문의">기타문의</option>
+		</select>
+
+		<button onclick="onSearchButtonClick()" >검색</button> <!-- 검색 버튼 추가 -->
+		<br><br>
+		<!-- 총 게시물 개수를 표시할 위치 -->
+		<div id="total-items">총 게시물 수: 0</div>
+		
+
+        <div id="main-container">
+            <!-- 게시글 목록 -->
+            <div class="board-table-container">
+                <table id="board-table" data-board-id="${board.idx}">
+                    <thead>
+                        <tr>
+                            <th>번호 </th>
+                            <th>카테고리 </th>
+                            <th>작성자</th>
+                            <th>작성시간 </th>
+                            <th>조회수 </th>
+                            <th>상세</th>
+                        </tr>
+                    </thead>
+                    <tbody id="board-list">
+                        <!-- 게시글 목록 -->
+                    </tbody>
+                </table>
+
+                <!-- 페이징 버튼 영역 -->
+                <div id="pagination">
+				    <button id="first-page-button" onclick="firstPage()">처음</button>
+				    <button id="prev-page-button" onclick="prevPageRange()" >이전</button>
+				    <span id="page-numbers"></span>
+				    <button id="next-page-button" onclick="nextPageRange()">다음</button>
+				    <button id="last-page-button" onclick="lastPage()">마지막</button>
+				</div>
+            </div>
+
+            <!-- 게시글 상세보기 -->
+			<div id="detail-content" style="display: none;">
+				<input type="hidden" id="detail-idx">
+				<button onclick="toggleDetail3()">닫기</button>
+				<br><br>
+			    <h3> <span id="detail-title"></span></h3>
+			    <br>
+			    <p>작성자: <span id="detail-name"></span></p>
+			    <p>이메일: <span id="detail-email"></span></p>
+			    <p>내용:</p>
+			    <p id="detail-etc" class="limited-width"></p>
+			    <br>
+			    <img id="detail-photo" src="#" alt="첨부된 사진" style="display: none;">
+			    <div id=detail-day>
+			    <p>작성일: <span id="detail-regdate"></span></p>
+			    </div>
+			    <p>조회수: <span id="detail-cnt"></span></p>
+			    <br>
+			    <!-- 게시글 수정일과 수정자 -->
+				<div id="detail-modified" style="display:none;">
+				    <p>수정일: <span id="detail-modified-date"></span></p>
+				</div>
+				<br>
+			    <div class="button-container">
+	   				<button onclick="toggleEditForm()" id="edit-btn">수정</button>
+					<button id="delete-btn" style="display:none;">삭제</button>
+				</div>
+   				<br><br>
+				<h7>-------------댓글-------------</h7>
+				<div id="comment-list" style="margin-top: 10px;">
+				<!-- 댓글이 여기에 표시됩니다 -->
+				</div>				
+				<!-- 댓글 작성 폼 (관리자에게만 표시) -->
+				<div id="comment-form" style="display: none;">
+				   <textarea id="comment-input" oninput="validateCommentLength()"></textarea>
+				   <span id="comment-char-count">0/255 글자</span>
+				   <button onclick="addComment()">댓글 작성</button>
+				</div>
+			 </div>
+			 
+		
+			 
+
+
+                <!-- 수정 폼 -->
+                <div id="edit-form" style="display: none;">
+                    <h3>게시글 수정</h3>
+                   <input type="hidden" id="edit-idx">
+                   
+                    <input type="text" id="edit-title" placeholder="제목" readonly><br>
+                    <textarea id="edit-etc" placeholder="내용" oninput="validateLength()"></textarea><br>
+                    <input type="text" id="edit-name"  readonly><br>
+                    <!-- 비밀글 체크박스 -->
+				    <label>
+				        <input type="checkbox" id="edit-is-secret"> 비밀글로 설정
+				    </label><br>
+                    <div class="file-label">
+                        <span id="current-photo-name">첨부된 파일 없음</span>
+                        <input type="file" id="edit-photo" style="margin-left: 10px;">
+                    </div><br>
+                    <button onclick="submitEdit()">수정 완료</button>
+                    <button onclick="toggleDetail2()">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="/app.js"></script>
+</body>
+</html>

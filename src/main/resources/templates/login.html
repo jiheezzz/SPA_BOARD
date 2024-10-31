@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Register</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 100px;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .container h2 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #5cb85c;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #4cae4c;
+        }
+
+        .toggle-link {
+            text-align: right;
+            margin-top: 10px;
+            display: block;
+            cursor: pointer;
+            color: #007bff;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+
+#password {
+    width: 100%; /* 입력 필드는 가득 차도록 */
+    padding-right: 50px; /* 버튼이 겹치지 않게 여유 공간 */
+}
+
+.password-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+
+.password-container2 {
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    flex: 100; /* Allows input to take up remaining space */
+}
+
+input{
+	flex: 100;
+	width: 97%;
+}
+
+.password-container2 input {
+    flex: 100; /* Allows input to take up remaining space */
+}
+
+.password-container button {
+    width: 20%;
+    margin-left: 5px; /* Add space between input and button if needed */
+    padding: 10px; /* Adjust padding for better appearance */
+    background-color : white;
+	border: 1px solid #aaa;
+}
+
+.password-container2 button {
+    width: 10%;
+    margin-left: 5px; /* Add space between input and button if needed */
+    padding: 10px; /* Adjust padding for better appearance */
+    background-color : white;
+    border: 1px solid #aaa;
+}
+
+
+
+
+
+
+
+    </style>
+</head>
+
+<body>
+
+   <div id="container"> 	
+        <!-- 로그인 폼 -->
+        <h2 id="form-title">로그인</h2>
+        <br><br>
+        <form action="/login" method="POST" id="login-form">
+        	<label>아이디</label>
+            <input type="text" name="username" id="username" placeholder="아이디를 입력하세요." autocomplete="username" required  maxlength="11">
+            <label>패스워드 (8자리 이상 20자리 이하, 숫자, 영문, 특수문자를 포함)</label>
+            <div class="password-container">
+            <input type="password" name="password" id="login-password" placeholder="비밀번호를 입력하세요."  required maxlength="20" autocomplete="current-password">
+            <button type="button" id="toggle-password2">🙈</button>
+            </div>
+            <button type="submit" id="submit-btn">로그인</button>
+        </form>
+
+        <!-- 회원가입 폼 -->
+        <form action="/register" method="POST" id="register-form" class="hidden">
+        	<label >아이디</label>
+            <input id="id" type="text" name="username" placeholder="아이디를 입력하세요" autocomplete="username" maxlength="11">
+            <span id="username-check-result"></span> <!-- 중복 여부 표시 -->
+            <br><br>
+            <button type="button" onclick="checkDuplicateUsername()">중복 체크</button>
+
+            <br><br>
+            <label for="password">비밀번호</label>
+			<div class="password-container2">
+			    <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required autocomplete="new-password" maxlength="20">
+			    <button type="button" id="toggle-password">🙈</button> <!-- 버튼에 아이콘 사용 가능 -->
+			</div>
+			<label >(비밀번호는 8자리 이상 20자리 이하, 숫자, 영문, 특수문자를 포함해야 합니다 !)</label>
+			<br><br>
+			<label id="password-match-result"></label> <!-- 비밀번호 일치 여부 표시 -->
+			<br><br>
+			<label for="confirm-password">비밀번호 확인</label>
+			<div class="password-container2">
+			    <input type="password" id="confirm-password" name="confirm-password" placeholder="동일한 비밀번호를 입력하세요" required autocomplete="new-password" maxlength="20">
+			    <button type="button" id="toggle-confirm-password">🙈</button>
+			</div>
+			<button type="button" id="confirm-password-button">Confirm Password</button>
+			<br><br>
+
+		    <label >이름</label>
+            <input id="name" type="text" name="name" placeholder="이름을 입력하세요" required maxlength="11">
+            
+    		<label >이메일</label>
+		    <!-- 이메일 앞부분 입력 -->
+		    <input type="text" id="email-username" name="email-username" placeholder="이메일을 입력하세요" required maxlength="11">
+		    <!-- 이메일 뒷부분 입력 (도메인 선택) -->
+		    <select id="domain" name="domain" >
+		        <option value="@gmail.com">@gmail.com</option>
+		        <option value="@naver.com">@naver.com</option>
+		        <option value="@daum.net">@daum.net</option>
+		        <option value="@outlook.com">@outlook.com</option>
+		        <option value="@yahoo.com">@yahoo.com</option>
+		    </select>
+		    <br><br>
+			<button type="button" onclick="checkDuplicateEmail()">이메일 중복 체크</button>
+    		<span id="email-check-result"></span> <!-- 이메일 중복 여부 표시 -->
+    		<br><br>
+            <button type="submit" id="register-button">가입하기</button>
+        </form>
+
+        <a class="toggle-link" id="toggle-link">회원가입</a>
+    </div>
+
+<script>
+let isLogin = false; // 로그인 상태를 나타내는 변수
+let isUsernameChecked = false;  // 아이디 중복 체크 여부
+let isEmailChecked = false; // 이메일 중복 검사 상태
+let isPasswordConfirmed = false; // 비밀번호 확인 상태
+
+
+
+
+
+
+//DOM 로드 후 이벤트 리스너 설정
+$(document).ready(function() {
+    sanitizeInputFields(); // 페이지 로드 시 공백 차단 및 XSS 방지 처리 적용
+    togglePasswordVisibility('#password', '#toggle-password');
+    togglePasswordVisibility('#confirm-password', '#toggle-confirm-password');
+    togglePasswordVisibility('#login-password', '#toggle-password2');
+
+    // 벨리데이션 체크
+    validateOnBlur(); // 입력 필드 커서 이동 시 벨리데이션 체크
+});
+
+
+
+
+
+
+
+//회원가입하기
+//비밀번호 볼수있는 버튼
+function togglePasswordVisibility(passwordFieldId, toggleButtonId) {
+    const passwordField = $(passwordFieldId);
+    const toggleButton = $(toggleButtonId);
+
+    toggleButton.on('click', function () {
+        if (passwordField.attr('type') === 'password') {
+            passwordField.attr('type', 'text');
+            toggleButton.text('👀'); // 눈 감기 아이콘
+        } else {
+            passwordField.attr('type', 'password');
+            toggleButton.text('🙈'); // 눈 뜨는 아이콘
+        }
+    });
+}
+//아이디 중복확인
+function checkDuplicateUsername() {
+    const usernameField = $('#id');
+    const username = usernameField.val();
+    
+    if (username.trim() === '') {
+        alert('아이디를 입력하세요.');
+        return;
+    }
+
+    $.ajax({
+        url: `/check-username?username=${encodeURIComponent(username)}`, // 인코딩 추가
+        type: 'GET',
+        success: function(data) {
+            const resultElement = $('#username-check-result');
+            if (data.exists) {
+                isUsernameChecked = false; // 중복검사 실패로 저장
+                resultElement.text('이미 사용 중인 아이디입니다.');
+            } else {
+                isUsernameChecked = true; // 중복검사 성공으로 저장
+                resultElement.text('사용 가능한 아이디입니다.');
+                usernameField.prop('readonly', true); // 중복검사 성공 후 수정 불가
+            }
+        },
+        error: function(xhr) {
+            alert('아이디 중복 확인 중 오류가 발생했습니다.');
+        }
+    });
+}
+// 비밀번호 확인 및 미확인시 저장불가, 형식제한
+function validateOnBlur() {
+    const usernameField = $('#id');
+    const nameField = $('#name');
+    const emailUsernameField = $('#email-username');
+    const passwordField = $('#password');
+    const confirmPasswordField = $('#confirm-password');
+    const confirmPasswordButton = $('#confirm-password-button');
+    const registerButton = $('#register-button');
+    const passwordMatchResult = $('#password-match-result');
+
+    let isPasswordConfirmed = false;
+
+
+    confirmPasswordButton.on('click', function() {
+        const password = passwordField.val();
+        const confirmPassword = confirmPasswordField.val();
+        const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
+
+        if (!passwordPattern.test(password)) {
+            passwordMatchResult.text('비밀번호는 8자리 이상, 숫자, 영문, 특수문자를 포함해야 합니다.');
+            passwordMatchResult.css('color', 'red');
+            passwordField.val('');
+            confirmPasswordField.val('');
+            isPasswordConfirmed = false;
+            return;
+        }
+
+        if (password === confirmPassword) {
+            passwordMatchResult.text('비밀번호가 확인되었습니다.');
+            passwordMatchResult.css('color', 'green');
+            isPasswordConfirmed = true;
+            confirmPasswordButton.prop('disabled', true);
+            registerButton.prop('disabled', false);
+        } else {
+            passwordMatchResult.text('비밀번호가 일치하지 않습니다.');
+            passwordMatchResult.css('color', 'red');
+            confirmPasswordField.val('');
+            isPasswordConfirmed = false;
+        }
+    });
+
+
+    usernameField.on('blur', function() {
+        const specialCharPattern = /[^a-zA-Z0-9]/g;
+        let value = usernameField.val();
+        if (specialCharPattern.test(value)) {
+            alert('아이디에는 특수문자를 사용할 수 없습니다.');
+            usernameField.val(value.replace(specialCharPattern, ''));
+        }
+        if (value.length > 11) {
+            alert('아이디는 최대 11글자까지 가능합니다.');
+            usernameField.val(value.substring(0, 11));
+        }
+    });
+
+ 
+    nameField.on('blur', function() {
+        const specialCharPattern = /[^a-zA-Z가-힣]/g;
+        let value = nameField.val();
+        if (specialCharPattern.test(value)) {
+            alert('이름에는 특수문자를 사용할 수 없습니다.');
+            nameField.val(value.replace(specialCharPattern, ''));
+        }
+    });
+
+
+    emailUsernameField.on('blur', function() {
+        const specialCharPattern = /[^a-zA-Z0-9]/g;
+        let value = emailUsernameField.val();
+        if (specialCharPattern.test(value)) {
+            alert('이메일 앞부분에는 특수문자를 사용할 수 없습니다.');
+            emailUsernameField.val(value.replace(specialCharPattern, ''));
+        }
+        if (value.length > 11) {
+            alert('이메일 앞부분은 최대 11글자까지 가능합니다.');
+            emailUsernameField.val(value.substring(0, 11));
+        }
+    });
+
+
+    confirmPasswordField.on('input', function() {
+        passwordMatchResult.text('');
+        isPasswordConfirmed = false;
+        confirmPasswordButton.prop('disabled', false);
+    });
+
+    passwordField.on('input', function() {
+        isPasswordConfirmed = false;
+        confirmPasswordButton.prop('disabled', false);
+        passwordMatchResult.text('');
+    });
+
+
+    $('#register-form').on('submit', function(event) {
+        const password = passwordField.val();
+        const confirmPassword = confirmPasswordField.val();
+
+        if (password !== confirmPassword || !isPasswordConfirmed) {
+            alert('비밀번호를 확인해야 합니다.');
+            event.preventDefault();
+            return; // 중복 실행 방지
+        }
+
+    });
+}
+// 아이디 중복확인 검증
+function validateForm() {
+    // 회원가입 폼에서 중복 체크가 안 되었을 경우 경고 메시지 표시
+    if (!isLogin && !isUsernameChecked) {
+        alert('아이디 중복 검사를 해주세요.');
+        return false; // 중복 검사를 하지 않았을 때 회원가입 불가
+    }
+    return true; // 중복 검사를 했을 때만 회원가입 진행
+}
+// 회원가입 폼 제출 시 검증 함수 실행
+$('#register-form').on('submit', function(event) {
+    // 회원가입 폼에서 중복 체크를 요구
+    isLogin = false;
+    if (!validateForm()) {
+        event.preventDefault();
+        return false;
+    }
+});
+//이메일 중복 확인 기능
+function checkDuplicateEmail() {
+    const emailUsernameField = $('#email-username');
+    const emailDomainField = $('#domain');
+    const emailUsername = emailUsernameField.val();
+    const emailDomain = emailDomainField.val();
+    const email = emailUsername + emailDomain;
+
+    if (emailUsername.trim() === '') {
+        alert('이메일을 입력하세요.');
+        return;
+    }
+
+    // AJAX를 사용하여 이메일 중복 확인 요청
+    $.ajax({
+        url: `/check-email?email=${encodeURIComponent(email)}`,
+        type: 'GET',
+        success: function(data) {
+            const resultElement = $('#email-check-result');
+            if (data.exists) {
+                resultElement.text('이미 사용 중인 이메일입니다.').css('color', 'red');
+                isEmailChecked = false; // 이메일 중복 확인 실패
+            } else {
+                resultElement.text('사용 가능한 이메일입니다.').css('color', 'green');
+                emailUsernameField.prop('readonly', true); // 이메일 사용자명 수정 불가능
+                isEmailChecked = true; // 이메일 중복 확인 성공
+            }
+        },
+        error: function() {
+            alert('이메일 중복 확인 중 오류가 발생했습니다.');
+        }
+    });
+}
+// 이메일 도메인 선택이 변경될 때, 중복 확인 상태를 초기화하는 기능
+$('#domain').on('change', function() {
+    $('#email-check-result').text(''); // 이메일 중복 확인 메시지 초기화
+    isEmailChecked = false; // 이메일 중복 확인 취소
+    $('#email-username').prop('readonly', false); // 이메일 사용자명 수정 가능하게 설정
+});
+// 폼 제출 시 검증
+$('#register-form').on('submit', function(event) {
+    const usernameField = $('#id');
+
+    // 이메일 중복 검사가 통과되지 않았을 때
+    if (!isEmailChecked) {
+        event.preventDefault(); // 이메일 중복검사 안되면 제출 중지
+        alert('이메일 중복검사를 완료하세요.');
+        return false;
+    }
+
+    // 폼 제출 전에 모든 필드 수정 금지
+    usernameField.prop('readonly', true); // 아이디 수정 금지
+
+    return validateForm(); // 폼 검증 함수 호출 (기존 코드에 있음)
+});
+
+
+
+
+
+
+
+
+
+
+
+
+//벨리데이션하기
+// XSS 방지
+function escapeHTML(str) {
+    return str.replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+// 입력 필드 공백 및 HTML 이스케이프 처리
+function sanitizeInputFields() {
+    const inputs = $('input, textarea');
+
+    inputs.each(function() {
+        // 공백을 입력하려고 하면 차단
+        $(this).on('keydown', function(event) {
+            if (event.key === ' ' || event.keyCode === 32) {
+                event.preventDefault(); // 공백 입력을 차단
+            }
+        });
+
+        // 입력 중 XSS 방지 처리
+        $(this).on('input', function() {
+            $(this).val(escapeHTML($(this).val()));
+        });
+    });
+}
+
+
+
+
+
+
+
+
+
+
+
+//로그인하기
+
+//로그인 폼 제출 시 검증 함수 실행
+$('#login-form').on('submit', function(event) {
+    resetStateOnLogout(); // 로그아웃 시 상태 초기화
+
+    // 기본 폼 제출 동작 중지
+    event.preventDefault();
+
+    // 폼 데이터 수집
+    const formData = new FormData(this);
+    const errorMessage = $('#error-message');
+
+    // 서버로 로그인 요청 (AJAX 사용)
+    $.ajax({
+        url: '/login',
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            // 로그인 성공 시 메인 페이지로 리다이렉트
+            window.location.href = '/main';
+        },
+        error: function(xhr) {
+            // 로그인 실패 시 처리
+            alert('아이디, 비밀번호를 확인하세요.');
+            $('#login-form')[0].reset(); // 폼 초기화
+            errorMessage.text('로그인 중 오류가 발생했습니다.');
+            errorMessage.css('display', 'block');
+        }
+    });
+});
+
+
+
+
+
+
+
+
+
+
+
+
+//초기화하기
+// 로그아웃 시 검색 상태와 페이지 상태 초기화
+function resetStateOnLogout() {
+    localStorage.removeItem('searchType');
+    localStorage.removeItem('searchInput');
+    localStorage.removeItem('currentPage');
+    localStorage.removeItem('currentBoardId');
+    localStorage.removeItem('isDetailOpen');
+}
+
+
+
+
+
+
+
+
+
+
+//전환하기
+const loginForm = $('#login-form');
+const registerForm = $('#register-form');
+const formTitle = $('#form-title');
+const toggleLink = $('#toggle-link');
+
+toggleLink.on('click', () => {
+    isLogin = !isLogin;
+    if (isLogin) {
+        loginForm.removeClass('hidden');
+        registerForm.addClass('hidden');
+        formTitle.text('로그인');
+        toggleLink.text('회원가입');
+    } else {
+        loginForm.addClass('hidden');
+        registerForm.removeClass('hidden');
+        formTitle.text('회원가입');
+        toggleLink.text('로그인');
+    }
+});
+</script>
+</body>
+
+</html>
