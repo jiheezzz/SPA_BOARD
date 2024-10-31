@@ -11,7 +11,9 @@
       <h2>**화면</h2>
       <td align="center">
         <h3>로그인</h3>
+        <a href="https://cafeptthumb-phinf.pstatic.net/MjAyNDEwMzFfMTU3/MDAxNzMwMzU5NDg5MDI0.BPKQh46HChMKC-8BzAC81kayWx7ioLJjODS2SDN_TAkg.ezmfV-          2XT7VpoUNmCZeBUG52ALRa71fiNfSrC5Azb7gg.PNG/%EB%A1%9C%EA%B7%B8%EC%9D%B8.PNG?type=w1600" target="_blank">
         <img width="800" src="https://cafeptthumb-phinf.pstatic.net/MjAyNDEwMzFfMTU3/MDAxNzMwMzU5NDg5MDI0.BPKQh46HChMKC-8BzAC81kayWx7ioLJjODS2SDN_TAkg.ezmfV-          2XT7VpoUNmCZeBUG52ALRa71fiNfSrC5Azb7gg.PNG/%EB%A1%9C%EA%B7%B8%EC%9D%B8.PNG?type=w1600" style="max-width: 100%;">
+        </a>
       </td>
       <td align="center">
         <h3>회원가입</h3>
